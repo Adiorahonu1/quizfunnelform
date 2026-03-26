@@ -31,6 +31,15 @@
       padding: 0 32px; height: 64px;
     }
     .navbar-brand { font-family: 'Playfair Display', serif; font-size: 1.1rem; color: var(--navy); font-weight: 700; letter-spacing: -0.01em; }
+    .navbar-logo { height: 44px; width: auto; display: block; }
+    .intro-logo { height: 80px; width: auto; margin-bottom: 4px; }
+    .confirm-logo { height: 64px; width: auto; margin-bottom: 4px; }
+    .site-footer {
+      background: var(--navy); padding: 40px 24px;
+      display: flex; flex-direction: column; align-items: center; gap: 14px;
+    }
+    .footer-logo { height: 72px; width: auto; filter: brightness(0) invert(1); opacity: 0.85; }
+    .footer-text { font-size: 0.78rem; color: rgba(255,255,255,0.45); text-align: center; }
     .navbar-cta {
       background: var(--navy); color: var(--white); border: none; border-radius: 50px;
       padding: 9px 22px; font-size: 0.85rem; font-weight: 600; cursor: pointer; text-decoration: none;
@@ -389,13 +398,18 @@
 <body>
 
 <nav class="navbar">
-  <span class="navbar-brand">Life Changers Financial Services</span>
+  <img src="logo.png" alt="Life Changers Financial Services" class="navbar-logo" />
   <a href="https://calendly.com/blengikephp/one-on-one-with-blessing-clone" target="_blank" class="navbar-cta">Book a Call</a>
 </nav>
 
 <div class="page">
   <div id="app"></div>
 </div>
+
+<footer class="site-footer">
+  <img src="logo.png" alt="Life Changers Financial Services" class="footer-logo" />
+  <p class="footer-text">© 2025 Life Changers Financial Services. All rights reserved.</p>
+</footer>
 
 <script>
 // ── Constants ──────────────────────────────────────────────────────────────
@@ -630,6 +644,7 @@ function renderIntro() {
         <div class="banner-label"><div id="banner-label-name" class="banner-label-name"></div></div>
       </div>
       <div class="intro-content">
+        <img src="logo.png" alt="Life Changers" class="intro-logo" />
         <div class="intro-eyebrow">Life Changers® Financial Status Assessment</div>
         <h1 class="intro-title">What Is Your Financial Status?</h1>
         <p class="intro-body">Answer 15 questions to receive your personalised Financial Status Report. A diagnostic of your wealth personality, priorities, and the strategy most aligned with who you are.</p>
@@ -915,6 +930,7 @@ function renderConfirm() {
       <div class="confirm-divider"></div>
 
       <div class="confirm-cta-card">
+        <img src="logo.png" alt="Life Changers" class="confirm-logo" />
         <div class="confirm-cta-eyebrow">Take the next step</div>
         <h3 class="confirm-cta-heading">Want expert guidance on your financial path?</h3>
         <p class="confirm-cta-body">Our advisors understand every financial archetype. Whether you are a Freedom Seeker, Legacy Builder, Achievement Driver, Wealth Creator, or Connected Investor, we know exactly what your next move should be.</p>
