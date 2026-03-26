@@ -1,0 +1,836 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Financial Status Assessment | Life Changers Financial Services</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;1,600;1,700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --navy:   #1a2744;
+      --teal:   #2e6e6e;
+      --gold:   #c9a84c;
+      --bg:     #f0f1f5;
+      --white:  #ffffff;
+      --text:   #1a2744;
+      --sub:    #5a6478;
+      --border: #d8dae4;
+    }
+
+    html, body { min-height: 100%; font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); }
+
+    /* ── Navbar ── */
+    .navbar {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      background: var(--white); border-bottom: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 32px; height: 64px;
+    }
+    .navbar-brand { font-family: 'Playfair Display', serif; font-size: 1.1rem; color: var(--navy); font-weight: 700; letter-spacing: -0.01em; }
+    .navbar-cta {
+      background: var(--navy); color: var(--white); border: none; border-radius: 50px;
+      padding: 9px 22px; font-size: 0.85rem; font-weight: 600; cursor: pointer; text-decoration: none;
+      transition: background 0.2s;
+    }
+    .navbar-cta:hover { background: var(--teal); }
+
+    .page { padding-top: 64px; min-height: 100vh; }
+
+    /* ══════════════════════════════════════════
+       INTRO SCREEN
+    ══════════════════════════════════════════ */
+    .intro-screen { display: flex; flex-direction: column; }
+
+    /* Banner — lighter overlay so faces are visible */
+    .banner {
+      position: relative; width: 100%; height: 520px; overflow: hidden;
+      background: var(--navy);
+    }
+    .banner-slide {
+      position: absolute; inset: 0;
+      background-size: cover; background-position: center top;
+      opacity: 0; transition: opacity 1.2s ease-in-out;
+    }
+    .banner-slide.active { opacity: 1; }
+    .banner-slide::after {
+      content: ''; position: absolute; inset: 0;
+      background: linear-gradient(to right, rgba(26,39,68,0.45) 0%, rgba(26,39,68,0.18) 55%, transparent 100%);
+    }
+    .banner-label {
+      position: absolute; bottom: 0; right: 0; z-index: 2;
+      padding: 0 48px 40px 0; text-align: right;
+    }
+    .banner-label-name {
+      font-family: 'Playfair Display', serif; font-style: italic;
+      font-size: clamp(2rem, 5vw, 3.4rem); color: var(--white);
+      line-height: 1.1; text-shadow: 0 2px 20px rgba(0,0,0,0.5);
+      opacity: 0; transition: opacity 0.8s ease-in-out;
+    }
+    .banner-label-name.visible { opacity: 1; }
+
+    /* Intro content */
+    .intro-content {
+      background: var(--white); padding: 60px 24px 72px;
+      text-align: center; display: flex; flex-direction: column; align-items: center; gap: 20px;
+    }
+    .intro-eyebrow {
+      font-size: 0.78rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.12em;
+      color: var(--teal);
+    }
+    .intro-title {
+      font-family: 'Playfair Display', serif; font-size: clamp(1.9rem, 4vw, 2.8rem);
+      color: var(--navy); font-weight: 700; line-height: 1.2; max-width: 620px;
+    }
+    .intro-body {
+      font-size: 1.05rem; color: var(--sub); max-width: 560px; line-height: 1.75;
+    }
+    .intro-start {
+      margin-top: 8px;
+      background: var(--teal); color: var(--white); border: none; border-radius: 50px;
+      padding: 15px 40px; font-size: 1rem; font-weight: 600; cursor: pointer;
+      transition: background 0.2s, transform 0.1s;
+    }
+    .intro-start:hover { background: var(--navy); transform: translateY(-1px); }
+    .intro-note { font-size: 0.85rem; color: var(--sub); }
+
+    /* ══════════════════════════════════════════
+       QUIZ SCREEN
+    ══════════════════════════════════════════ */
+    .quiz-screen { max-width: 720px; margin: 0 auto; padding: 48px 24px 80px; }
+
+    .quiz-assessment-label {
+      font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.14em;
+      color: var(--sub); text-align: center; margin-bottom: 10px;
+    }
+    .quiz-meta {
+      display: flex; align-items: center; gap: 14px; margin-bottom: 32px;
+    }
+    .quiz-counter {
+      font-size: 0.85rem; font-weight: 600; color: var(--teal); white-space: nowrap; min-width: 110px;
+    }
+    .progress-track { flex: 1; height: 4px; background: var(--border); border-radius: 2px; overflow: hidden; }
+    .progress-fill { height: 100%; background: var(--teal); border-radius: 2px; transition: width 0.4s ease; }
+
+    .quiz-question {
+      font-family: 'Playfair Display', serif; font-size: clamp(1.25rem, 2.8vw, 1.65rem);
+      color: var(--navy); font-weight: 700; line-height: 1.35; margin-bottom: 36px;
+      text-align: center;
+    }
+    .quiz-subhead {
+      font-size: 0.78rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.1em;
+      color: var(--sub); text-align: center; margin-bottom: 12px;
+    }
+
+    /* Binary choice cards — gap between them */
+    .choices-wrap {
+      position: relative; display: flex; align-items: stretch; gap: 20px;
+    }
+    .choice-card {
+      flex: 1; background: var(--white); border: 2px solid var(--border);
+      border-radius: 16px; padding: 32px 24px; cursor: pointer;
+      display: flex; flex-direction: column; align-items: center; gap: 14px;
+      text-align: center; transition: border-color 0.2s, box-shadow 0.2s, transform 0.15s;
+      min-height: 210px; justify-content: center;
+    }
+    .choice-card:hover { border-color: var(--teal); box-shadow: 0 8px 32px rgba(46,110,110,0.12); transform: translateY(-2px); }
+    .choice-card.selected { border-color: var(--teal); background: #f0f7f7; box-shadow: 0 8px 32px rgba(46,110,110,0.18); }
+    .choice-icon svg { width: 48px; height: 48px; }
+    .choice-label { font-size: 1rem; font-weight: 600; color: var(--navy); line-height: 1.4; }
+
+    .or-badge {
+      position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%);
+      width: 38px; height: 38px; border-radius: 50%;
+      background: var(--navy); color: var(--white);
+      font-size: 0.68rem; font-weight: 700; letter-spacing: 0.05em;
+      display: flex; align-items: center; justify-content: center;
+      z-index: 2; box-shadow: 0 2px 8px rgba(0,0,0,0.25);
+      pointer-events: none;
+    }
+
+    /* Slider */
+    .slider-wrap { display: flex; flex-direction: column; align-items: center; gap: 20px; }
+    .slider-labels { width: 100%; display: flex; justify-content: space-between; align-items: flex-start; }
+    .slider-label { font-size: 0.8rem; color: var(--sub); max-width: 120px; text-align: center; line-height: 1.3; }
+    .slider-label:first-child { text-align: left; }
+    .slider-label:last-child { text-align: right; }
+    .slider-value-display { font-family: 'Playfair Display', serif; font-size: 2.5rem; font-weight: 700; color: var(--teal); }
+    input[type=range] { width: 100%; -webkit-appearance: none; height: 6px; background: var(--border); border-radius: 3px; outline: none; }
+    input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; width: 24px; height: 24px; border-radius: 50%; background: var(--teal); cursor: pointer; border: 3px solid var(--white); box-shadow: 0 2px 8px rgba(0,0,0,0.2); }
+
+    /* Multi-select */
+    .multiselect-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 12px; }
+    .ms-chip { background: var(--white); border: 2px solid var(--border); border-radius: 12px; padding: 14px 16px; cursor: pointer; text-align: center; font-size: 0.9rem; font-weight: 500; color: var(--navy); transition: border-color 0.2s, background 0.2s; }
+    .ms-chip:hover { border-color: var(--teal); }
+    .ms-chip.selected { border-color: var(--teal); background: #f0f7f7; }
+
+    /* Next button */
+    .btn-next { display: block; margin: 36px auto 0; background: var(--navy); color: var(--white); border: none; border-radius: 50px; padding: 14px 44px; font-size: 0.95rem; font-weight: 600; cursor: pointer; transition: background 0.2s, transform 0.1s; }
+    .btn-next:hover { background: var(--teal); transform: translateY(-1px); }
+
+    /* ══════════════════════════════════════════
+       GENERATING SCREEN
+    ══════════════════════════════════════════ */
+    .generating-screen {
+      min-height: calc(100vh - 64px); display: flex; flex-direction: column;
+      align-items: center; justify-content: center; padding: 40px 24px;
+      background: var(--white);
+    }
+    .gen-title {
+      font-family: 'Playfair Display', serif; font-size: 1.5rem; color: var(--navy);
+      font-weight: 700; margin-bottom: 36px; text-align: center;
+    }
+    .gen-bar-track {
+      width: min(420px, 100%); height: 6px; background: var(--border); border-radius: 3px;
+      overflow: hidden; margin-bottom: 40px;
+    }
+    .gen-bar-fill {
+      height: 100%; background: var(--teal); border-radius: 3px; width: 0%;
+      animation: genFill 2.2s ease forwards;
+    }
+    @keyframes genFill { from { width: 0% } to { width: 100% } }
+
+    .gen-lines { display: flex; flex-direction: column; gap: 14px; width: min(420px, 100%); }
+    .gen-line {
+      display: flex; align-items: center; gap: 12px;
+      opacity: 0; animation: genLineIn 0.5s ease forwards;
+      font-size: 0.95rem; color: var(--sub);
+    }
+    .gen-line.done { color: var(--teal); font-weight: 600; font-size: 1rem; }
+    .gen-line-dot {
+      width: 8px; height: 8px; border-radius: 50%; background: var(--border); flex-shrink: 0;
+    }
+    .gen-line.done .gen-line-dot { background: var(--teal); }
+    .gen-line:nth-child(1) { animation-delay: 0.3s; }
+    .gen-line:nth-child(2) { animation-delay: 0.85s; }
+    .gen-line:nth-child(3) { animation-delay: 1.45s; }
+    .gen-line:nth-child(4) { animation-delay: 2.05s; }
+    @keyframes genLineIn { from { opacity: 0; transform: translateX(-8px); } to { opacity: 1; transform: translateX(0); } }
+
+    /* ══════════════════════════════════════════
+       TEASER SCREEN
+    ══════════════════════════════════════════ */
+    .teaser-screen { max-width: 640px; margin: 0 auto; padding: 52px 24px 80px; }
+
+    .teaser-eyebrow { font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.12em; color: var(--teal); text-align: center; margin-bottom: 10px; }
+    .teaser-headline {
+      font-family: 'Playfair Display', serif; font-size: clamp(1.7rem, 4vw, 2.4rem);
+      color: var(--navy); font-weight: 700; text-align: center; line-height: 1.2; margin-bottom: 28px;
+    }
+
+    /* Winner hero image */
+    .teaser-hero {
+      width: 100%; height: 300px; border-radius: 16px; overflow: hidden; margin-bottom: 28px;
+      position: relative;
+    }
+    .teaser-hero img { width: 100%; height: 100%; object-fit: cover; object-position: top; }
+    .teaser-hero-overlay {
+      position: absolute; inset: 0; border-radius: 16px;
+      background: linear-gradient(to top, rgba(26,39,68,0.5) 0%, transparent 60%);
+    }
+
+    /* Teaser description */
+    .teaser-desc-card {
+      background: var(--white); border-radius: 14px; border: 2px solid var(--border);
+      padding: 24px 28px; margin-bottom: 28px;
+    }
+    .teaser-desc-visible { font-size: 1rem; color: var(--text); line-height: 1.7; margin-bottom: 14px; }
+    .teaser-desc-locked {
+      filter: blur(5px); user-select: none; pointer-events: none;
+      font-size: 0.95rem; color: var(--sub); line-height: 1.7; margin-bottom: 10px;
+    }
+    .teaser-lock-label {
+      display: flex; align-items: center; gap: 8px;
+      font-size: 0.8rem; font-weight: 600; color: var(--sub);
+      border-top: 1px solid var(--border); padding-top: 12px; margin-top: 4px;
+    }
+
+    /* Score bars */
+    .teaser-bars { margin-bottom: 32px; }
+    .teaser-bars-title { font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: var(--sub); margin-bottom: 14px; }
+    .score-bar-row { display: flex; align-items: center; gap: 12px; margin-bottom: 10px; }
+    .score-bar-label { font-size: 0.82rem; font-weight: 500; color: var(--text); width: 150px; flex-shrink: 0; line-height: 1.2; }
+    .score-bar-track { flex: 1; height: 10px; background: var(--border); border-radius: 5px; overflow: hidden; }
+    .score-bar-fill { height: 100%; border-radius: 5px; background: var(--navy); transition: width 0.8s ease; }
+    .score-bar-row.winner .score-bar-fill { background: var(--gold); }
+    .score-bar-row.blurred { filter: blur(4px); pointer-events: none; user-select: none; }
+    .score-bar-pct { font-size: 0.8rem; font-weight: 600; color: var(--sub); width: 36px; text-align: right; flex-shrink: 0; }
+    .score-bar-row.winner .score-bar-pct { color: var(--teal); }
+
+    /* Email gate — inline on teaser */
+    .teaser-gate {
+      background: var(--navy); border-radius: 18px; padding: 32px 28px;
+      display: flex; flex-direction: column; gap: 14px; text-align: center;
+    }
+    .gate-title { font-family: 'Playfair Display', serif; font-size: 1.25rem; color: var(--white); font-weight: 700; line-height: 1.3; }
+    .gate-sub { font-size: 0.9rem; color: rgba(255,255,255,0.7); line-height: 1.5; }
+    .gate-input {
+      width: 100%; padding: 13px 20px; border: 2px solid rgba(255,255,255,0.2);
+      border-radius: 50px; font-size: 0.95rem; outline: none; background: rgba(255,255,255,0.1);
+      color: var(--white); font-family: 'Inter', sans-serif;
+      transition: border-color 0.2s;
+    }
+    .gate-input::placeholder { color: rgba(255,255,255,0.45); }
+    .gate-input:focus { border-color: var(--gold); }
+    .gate-submit {
+      width: 100%; background: var(--gold); color: var(--navy); border: none; border-radius: 50px;
+      padding: 14px; font-size: 0.95rem; font-weight: 700; cursor: pointer;
+      transition: opacity 0.2s, transform 0.1s;
+    }
+    .gate-submit:hover { opacity: 0.9; transform: translateY(-1px); }
+    .gate-note { font-size: 0.75rem; color: rgba(255,255,255,0.45); }
+
+    /* ══════════════════════════════════════════
+       FULL RESULT SCREEN
+    ══════════════════════════════════════════ */
+    .result-screen { max-width: 900px; margin: 0 auto; padding: 48px 24px 80px; }
+    .result-heading { font-family: 'Playfair Display', serif; font-size: clamp(1.6rem, 3.5vw, 2.4rem); color: var(--navy); font-weight: 700; text-align: center; margin-bottom: 8px; }
+    .result-subhead { text-align: center; color: var(--sub); margin-bottom: 36px; font-size: 1rem; }
+
+    /* Mosaic */
+    .mosaic { display: grid; grid-template-columns: 1fr 1fr 1fr; grid-template-rows: 240px 240px; gap: 6px; border-radius: 16px; overflow: hidden; margin-bottom: 40px; }
+    .mosaic-tile { position: relative; overflow: hidden; background: var(--navy); }
+    .mosaic-tile:nth-child(1) { grid-column: 1 / 2; grid-row: 1 / 2; }
+    .mosaic-tile:nth-child(2) { grid-column: 2 / 3; grid-row: 1 / 2; }
+    .mosaic-tile:nth-child(3) { grid-column: 3 / 4; grid-row: 1 / 3; }
+    .mosaic-tile:nth-child(4) { grid-column: 1 / 2; grid-row: 2 / 3; }
+    .mosaic-tile:nth-child(5) { grid-column: 2 / 3; grid-row: 2 / 3; }
+    .mosaic-tile img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform 0.4s ease; }
+    .mosaic-tile:hover img { transform: scale(1.04); }
+    .mosaic-overlay { position: absolute; inset: 0; background: linear-gradient(to top, rgba(26,39,68,0.85) 0%, rgba(26,39,68,0.2) 60%, transparent 100%); display: flex; flex-direction: column; justify-content: flex-end; padding: 20px; }
+    .mosaic-tile.winner .mosaic-overlay { background: linear-gradient(to top, rgba(46,110,110,0.9) 0%, rgba(46,110,110,0.35) 60%, transparent 100%); outline: 3px solid var(--teal); outline-offset: -3px; }
+    .mosaic-name { font-family: 'Playfair Display', serif; font-size: 0.95rem; color: var(--white); font-weight: 600; line-height: 1.2; }
+    .mosaic-pct { font-size: 1.5rem; font-weight: 700; color: var(--white); font-family: 'Playfair Display', serif; }
+    .mosaic-tile.winner .mosaic-pct { color: #a8ddd0; }
+
+    /* Profile card */
+    .profile-card { background: var(--white); border-radius: 20px; padding: 40px; border: 2px solid var(--border); margin-bottom: 24px; }
+    .profile-card-eyebrow { font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: var(--teal); margin-bottom: 8px; }
+    .profile-card-name { font-family: 'Playfair Display', serif; font-size: 1.7rem; color: var(--navy); font-weight: 700; margin-bottom: 16px; }
+    .profile-card-desc { color: var(--sub); line-height: 1.75; font-size: 1rem; }
+
+    .btn-cta { display: block; text-align: center; width: 100%; max-width: 360px; margin: 0 auto; background: var(--teal); color: var(--white); border: none; border-radius: 50px; padding: 16px 32px; font-size: 1rem; font-weight: 600; cursor: pointer; text-decoration: none; transition: background 0.2s, transform 0.1s; }
+    .btn-cta:hover { background: var(--navy); transform: translateY(-1px); }
+
+    /* Transitions */
+    .fade-enter { animation: fadeUp 0.4s ease both; }
+    @keyframes fadeUp { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
+
+    /* Responsive */
+    @media (max-width: 600px) {
+      .navbar { padding: 0 16px; }
+      .banner { height: 360px; }
+      .banner-label { padding: 0 20px 24px 0; }
+      /* Cards stack on mobile */
+      .choices-wrap { flex-direction: column; gap: 16px; }
+      .or-badge { top: 50%; left: 50%; }
+      .choice-card { min-height: 120px; padding: 20px 16px; }
+      .choice-icon svg { width: 38px; height: 38px; }
+      .mosaic { grid-template-columns: 1fr 1fr; grid-template-rows: 180px 180px 180px; }
+      .mosaic-tile:nth-child(3) { grid-column: 1 / 3; grid-row: 3 / 4; }
+      .profile-card { padding: 28px 20px; }
+      .score-bar-label { width: 120px; }
+      .teaser-gate { padding: 24px 20px; }
+    }
+  </style>
+</head>
+<body>
+
+<nav class="navbar">
+  <span class="navbar-brand">Life Changers Financial Services</span>
+  <a href="#" class="navbar-cta">Book a Call</a>
+</nav>
+
+<div class="page">
+  <div id="app"></div>
+</div>
+
+<script>
+// ── Constants ──────────────────────────────────────────────────────────────
+const N8N_WEBHOOK = 'https://n8n.srv1180913.hstgr.cloud/webhook/lcfs-quiz-result';
+
+const BANNER_IMAGES = [
+  { src: 'images/freedom_seeker.jpg',     label: 'The Freedom Seeker',     pos: 'center 22%' },
+  { src: 'images/legacy_builder.jpg',     label: 'The Legacy Builder',     pos: 'center 25%' },
+  { src: 'images/achievement_driver.jpg', label: 'The Achievement Driver', pos: 'center 18%' },
+  { src: 'images/wealth_creator.jpg',     label: 'The Wealth Creator',     pos: 'center 12%' },
+  { src: 'images/connected_investor.jpg', label: 'The Connected Investor', pos: '35% center' },
+];
+
+const ICONS = {
+  freedom: `<svg viewBox="0 0 52 52" fill="none" stroke="#2e6e6e" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 40 C12 28 22 14 44 10"/><path d="M36 10 l8 0 0 8"/><circle cx="16" cy="38" r="5"/></svg>`,
+  family: `<svg viewBox="0 0 52 52" fill="none" stroke="#2e6e6e" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="20" cy="16" r="6"/><circle cx="36" cy="18" r="4"/><path d="M8 42 C8 32 32 32 32 42"/><path d="M32 42 C32 36 46 36 46 42"/></svg>`,
+  peace: `<svg viewBox="0 0 52 52" fill="none" stroke="#2e6e6e" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="26" cy="26" r="18"/><path d="M26 8 L26 44"/><path d="M26 26 L12 38"/><path d="M26 26 L40 38"/></svg>`,
+  impact: `<svg viewBox="0 0 52 52" fill="none" stroke="#2e6e6e" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="26,6 32,20 48,22 36,34 39,50 26,42 13,50 16,34 4,22 20,20"/></svg>`,
+  goals: `<svg viewBox="0 0 52 52" fill="none" stroke="#2e6e6e" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="26" cy="26" r="18"/><circle cx="26" cy="26" r="10"/><circle cx="26" cy="26" r="4"/></svg>`,
+  support: `<svg viewBox="0 0 52 52" fill="none" stroke="#2e6e6e" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M26 44 L12 32 C8 28 10 20 16 18 C20 16 24 18 26 22 C28 18 32 16 36 18 C42 20 44 28 40 32 Z"/></svg>`,
+  independence: `<svg viewBox="0 0 52 52" fill="none" stroke="#2e6e6e" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M26 10 L26 42"/><path d="M14 18 L26 10 L38 18"/><circle cx="26" cy="44" r="2" fill="#2e6e6e"/></svg>`,
+  express: `<svg viewBox="0 0 52 52" fill="none" stroke="#2e6e6e" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 42 L14 28 L26 10 L38 28 L42 42"/><path d="M18 42 L34 42"/><path d="M26 10 L26 42"/></svg>`,
+  security: `<svg viewBox="0 0 52 52" fill="none" stroke="#2e6e6e" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M26 6 L44 14 L44 28 C44 38 36 44 26 48 C16 44 8 38 8 28 L8 14 Z"/><polyline points="18,26 24,32 34,20"/></svg>`,
+  achieve: `<svg viewBox="0 0 52 52" fill="none" stroke="#2e6e6e" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="8,40 20,24 30,32 44,12"/><polyline points="36,12 44,12 44,20"/></svg>`,
+  explore: `<svg viewBox="0 0 52 52" fill="none" stroke="#2e6e6e" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="26" cy="26" r="18"/><polygon points="22,18 34,26 22,34" fill="#2e6e6e" stroke="none"/></svg>`,
+  master: `<svg viewBox="0 0 52 52" fill="none" stroke="#2e6e6e" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="8" y="8" width="36" height="36" rx="4"/><path d="M16 20 L36 20"/><path d="M16 28 L28 28"/><path d="M16 36 L24 36"/></svg>`,
+  vision: `<svg viewBox="0 0 52 52" fill="none" stroke="#2e6e6e" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 26 C12 16 20 10 26 10 C32 10 40 16 46 26 C40 36 32 42 26 42 C20 42 12 36 6 26Z"/><circle cx="26" cy="26" r="6"/></svg>`,
+  grow: `<svg viewBox="0 0 52 52" fill="none" stroke="#2e6e6e" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M26 44 L26 20"/><path d="M26 20 C26 12 36 8 40 14"/><path d="M26 28 C26 20 16 16 12 22"/></svg>`,
+  proven: `<svg viewBox="0 0 52 52" fill="none" stroke="#2e6e6e" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="10" y="24" width="8" height="18" rx="2"/><rect x="22" y="16" width="8" height="26" rx="2"/><rect x="34" y="8" width="8" height="34" rx="2"/></svg>`,
+  stable: `<svg viewBox="0 0 52 52" fill="none" stroke="#2e6e6e" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 34 L26 16 L44 34"/><path d="M14 42 L14 28"/><path d="M38 42 L38 28"/><path d="M8 42 L44 42"/></svg>`,
+  meaningful: `<svg viewBox="0 0 52 52" fill="none" stroke="#2e6e6e" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="26" cy="20" r="8"/><path d="M26 28 L26 44"/><path d="M18 36 L34 36"/></svg>`,
+  milestones: `<svg viewBox="0 0 52 52" fill="none" stroke="#2e6e6e" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 42 L26 10 L42 42"/><path d="M18 30 L34 30"/></svg>`,
+  community: `<svg viewBox="0 0 52 52" fill="none" stroke="#2e6e6e" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="18" r="6"/><circle cx="34" cy="18" r="6"/><circle cx="26" cy="32" r="6"/><path d="M12 36 C12 30 24 28 24 28"/><path d="M40 36 C40 30 28 28 28 28"/></svg>`,
+};
+
+// ── Questions ──────────────────────────────────────────────────────────────
+const QUESTIONS = [
+  { id:'q1', block:'When building your financial future, which matters more?', type:'binary',
+    a:{ label:'Supporting and protecting the people I love', icon:'family' },
+    b:{ label:'Pursuing freedom and new financial horizons', icon:'freedom' } },
+  { id:'q2', block:'When building your financial future, which matters more?', type:'binary',
+    a:{ label:'Finding peace and stability with my money', icon:'peace' },
+    b:{ label:'Making a meaningful impact with my wealth', icon:'impact' } },
+  { id:'q3', block:'When building your financial future, which matters more?', type:'binary',
+    a:{ label:'Reaching my personal financial milestones', icon:'goals' },
+    b:{ label:'Supporting and protecting the people I love', icon:'support' } },
+  { id:'q4', block:'When building your financial future, which matters more?', type:'binary',
+    a:{ label:'Pursuing financial freedom and independence', icon:'independence' },
+    b:{ label:'Expressing myself through how I build wealth', icon:'express' } },
+  { id:'q5', type:'slider', min:1, max:5,
+    text:'Where are you in your financial journey?',
+    labelMin:'Just starting to think about it', labelMid:'Exploring my options', labelMax:'Ready to take action now' },
+  { id:'q6', block:'What does staying financially fulfilled mean to you?', type:'binary',
+    a:{ label:'Feeling financially secure and at peace', icon:'security' },
+    b:{ label:'Achieving something financially significant', icon:'achieve' } },
+  { id:'q7', block:'What does staying financially fulfilled mean to you?', type:'binary',
+    a:{ label:'Hitting my wealth-building goals on schedule', icon:'goals' },
+    b:{ label:'Exploring new investment opportunities', icon:'explore' } },
+  { id:'q8', block:'What does staying financially fulfilled mean to you?', type:'binary',
+    a:{ label:'Deep financial security for the people I love', icon:'family' },
+    b:{ label:'Mastering new wealth-building strategies', icon:'master' } },
+  { id:'q9', block:'What does staying financially fulfilled mean to you?', type:'binary',
+    a:{ label:'Growing and expanding into new opportunities', icon:'grow' },
+    b:{ label:'Creating lasting impact with my money', icon:'impact' } },
+  { id:'q10', type:'multiselect', max:3,
+    text:'What are your top financial priorities?',
+    options:['Retirement readiness','Building family wealth','Financial independence','Growing my business','Protecting loved ones','Wealth preservation','Other'] },
+  { id:'q11', block:'When planning your wealth strategy, which do you prioritize?', type:'binary',
+    a:{ label:'Protecting and providing for the people I love', icon:'family' },
+    b:{ label:'Expressing my unique financial vision', icon:'vision' } },
+  { id:'q12', block:'When planning your wealth strategy, which do you prioritize?', type:'binary',
+    a:{ label:'Growing into exciting new wealth opportunities', icon:'grow' },
+    b:{ label:'Mastering proven, reliable strategies', icon:'proven' } },
+  { id:'q13', block:'When planning your wealth strategy, which do you prioritize?', type:'binary',
+    a:{ label:'Simple, stable financial foundations', icon:'stable' },
+    b:{ label:'Making a meaningful difference with my wealth', icon:'meaningful' } },
+  { id:'q14', block:'When planning your wealth strategy, which do you prioritize?', type:'binary',
+    a:{ label:'Achieving clear, measurable financial goals', icon:'milestones' },
+    b:{ label:'Deep relationships and community impact', icon:'community' } },
+  { id:'q15', type:'slider', min:1, max:5,
+    text:'How confident are you making financial decisions today?',
+    labelMin:'I need guidance at every step', labelMid:'Somewhat confident', labelMax:'Confident and ready to act' },
+];
+
+// ── Profiles ───────────────────────────────────────────────────────────────
+const PROFILES = {
+  freedom_seeker: {
+    name: 'The Freedom Seeker',
+    intercept: -1.51,
+    weights: { q1:2.00, q2:0, q3:0, q4:-1.00, q6:0, q7:2.50, q8:0, q9:0, q11:0, q12:0, q13:0, q14:0 },
+    headline: "You're The Freedom Seeker",
+    teaserLine: "You believe wealth exists to fuel a life on your terms — flexible, adventurous, and full of possibility.",
+    desc: "You believe wealth exists to fuel a life on your terms — flexible, adventurous, and full of possibility. Your financial strategy should center on building independence so you can act when opportunity strikes. Life Changers can help you map a clear path to the financial freedom you're building toward.",
+    cta: 'Book Your Freedom Blueprint Call',
+    img: 'images/freedom_seeker.jpg',
+    imgPos: 'center 22%',
+  },
+  legacy_builder: {
+    name: 'The Legacy Builder',
+    intercept: -1.77,
+    weights: { q1:-1.00, q2:-1.00, q3:2.00, q4:0, q6:-1.50, q7:0, q8:-1.50, q9:0, q11:-1.00, q12:0, q13:-1.00, q14:0 },
+    headline: "You're The Legacy Builder",
+    teaserLine: "Your wealth is about more than money — it's about protecting the people you love and building something that lasts beyond you.",
+    desc: "Your wealth is about more than money — it's about protecting the people you love and building something that lasts beyond you. Your financial strategy should prioritize security, legacy, and generational impact. Life Changers specialises in helping Legacy Builders protect what matters most.",
+    cta: 'Book Your Legacy Protection Review',
+    img: 'images/legacy_builder.jpg',
+    imgPos: 'center 25%',
+  },
+  achievement_driver: {
+    name: 'The Achievement Driver',
+    intercept: -1.66,
+    weights: { q1:0, q2:2.50, q3:-1.00, q4:0, q6:4.60, q7:-1.50, q8:0, q9:1.50, q11:0, q12:0, q13:2.00, q14:-1.50 },
+    headline: "You're The Achievement Driver",
+    teaserLine: "You're goal-oriented and results-driven. You want a financial plan with clear milestones, measurable progress, and a strategy that keeps you moving forward.",
+    desc: "You're goal-oriented and results-driven. You want a financial plan with clear milestones, measurable progress, and a strategy that keeps you moving forward. Life Changers can build you a milestone-driven wealth roadmap that tracks your progress and holds you accountable.",
+    cta: 'Book Your Wealth Milestone Session',
+    img: 'images/achievement_driver.jpg',
+    imgPos: 'center 18%',
+  },
+  wealth_creator: {
+    name: 'The Wealth Creator',
+    intercept: -1.27,
+    weights: { q1:0, q2:0, q3:0, q4:2.00, q6:0, q7:0, q8:2.50, q9:0, q11:2.00, q12:2.00, q13:0, q14:0 },
+    headline: "You're The Wealth Creator",
+    teaserLine: "You think like an entrepreneur. You want to build, grow, and create — not just save.",
+    desc: "You think like an entrepreneur. You want to build, grow, and create — not just save. Your financial strategy should be bold, innovative, and aligned with your vision of what's possible. Life Changers works with Wealth Creators to design business-aligned wealth strategies that scale with you.",
+    cta: 'Book Your Business Wealth Strategy Call',
+    img: 'images/wealth_creator.jpg',
+    imgPos: 'center 12%',
+  },
+  connected_investor: {
+    name: 'The Connected Investor',
+    intercept: 0,
+    weights: { q1:0, q2:0, q3:0, q4:0, q6:0, q7:0, q8:0, q9:0, q11:0, q12:0, q13:0, q14:0 },
+    headline: "You're The Connected Investor",
+    teaserLine: "For you, wealth is relational — it grows through people, communities, and shared values.",
+    desc: "For you, wealth is relational — it grows through people, communities, and shared values. Your financial strategy should align your money with what truly matters to you and those around you. Life Changers can help you build a values-driven wealth plan that reflects your impact.",
+    cta: 'Book Your Impact Discovery Call',
+    img: 'images/connected_investor.jpg',
+    imgPos: '35% center',
+  },
+};
+
+const PROFILE_ORDER = ['freedom_seeker','legacy_builder','achievement_driver','wealth_creator','connected_investor'];
+
+// ── State ──────────────────────────────────────────────────────────────────
+const STATE = {
+  screen: 'intro',
+  currentQ: 0,
+  answers: {},
+  sliderValues: {},
+  multiselect: [],
+  email: '',
+  scores: {},
+  winner: '',
+};
+
+// ── Scoring ────────────────────────────────────────────────────────────────
+function computeScores() {
+  const logits = {};
+  for (const [key, profile] of Object.entries(PROFILES)) {
+    let score = profile.intercept;
+    for (const [qid, w] of Object.entries(profile.weights)) {
+      const ans = STATE.answers[qid];
+      if (ans !== undefined) score += w * ans;
+    }
+    logits[key] = score;
+  }
+  const maxL = Math.max(...Object.values(logits));
+  const exps = {};
+  let sumExp = 0;
+  for (const k in logits) { exps[k] = Math.exp(logits[k] - maxL); sumExp += exps[k]; }
+  const probs = {};
+  for (const k in exps) probs[k] = exps[k] / sumExp;
+  return probs;
+}
+
+function getWinner(scores) {
+  return Object.entries(scores).sort((a,b) => b[1]-a[1])[0][0];
+}
+
+// ── Banner ─────────────────────────────────────────────────────────────────
+let bannerTimer = null;
+let bannerIdx = 0;
+
+function startBanner() {
+  const container = document.getElementById('banner-slides');
+  const labelEl = document.getElementById('banner-label-name');
+  if (!container) return;
+  function show(idx) {
+    container.querySelectorAll('.banner-slide').forEach((s,i) => s.classList.toggle('active', i === idx));
+    labelEl.classList.remove('visible');
+    setTimeout(() => { labelEl.textContent = BANNER_IMAGES[idx].label; labelEl.classList.add('visible'); }, 200);
+  }
+  show(0);
+  bannerTimer = setInterval(() => { bannerIdx = (bannerIdx + 1) % BANNER_IMAGES.length; show(bannerIdx); }, 3500);
+}
+
+function stopBanner() {
+  if (bannerTimer) { clearInterval(bannerTimer); bannerTimer = null; }
+}
+
+// ── Render router ──────────────────────────────────────────────────────────
+function render() {
+  const app = document.getElementById('app');
+  app.innerHTML = '';
+  const el = document.createElement('div');
+  el.className = 'fade-enter';
+
+  if (STATE.screen === 'intro') {
+    el.innerHTML = renderIntro();
+    app.appendChild(el);
+    setTimeout(startBanner, 50);
+    return;
+  }
+  stopBanner();
+  if (STATE.screen === 'quiz') { el.innerHTML = renderQuiz(); app.appendChild(el); attachQuizHandlers(); return; }
+  if (STATE.screen === 'generating') { el.innerHTML = renderGenerating(); app.appendChild(el); setTimeout(() => { STATE.screen = 'teaser'; render(); }, 2700); return; }
+  if (STATE.screen === 'teaser') { el.innerHTML = renderTeaser(); app.appendChild(el); attachTeaserHandlers(); return; }
+  if (STATE.screen === 'result') { el.innerHTML = renderResult(); app.appendChild(el); return; }
+  app.appendChild(el);
+}
+
+// ── Intro ──────────────────────────────────────────────────────────────────
+function renderIntro() {
+  const slides = BANNER_IMAGES.map(b => `<div class="banner-slide" style="background-image:url('${b.src}');background-position:${b.pos}"></div>`).join('');
+  return `
+    <div class="intro-screen">
+      <div class="banner">
+        <div id="banner-slides">${slides}</div>
+        <div class="banner-label"><div id="banner-label-name" class="banner-label-name"></div></div>
+      </div>
+      <div class="intro-content">
+        <div class="intro-eyebrow">Life Changers® Financial Status Assessment</div>
+        <h1 class="intro-title">What Is Your Financial Status?</h1>
+        <p class="intro-body">Answer 15 questions to receive your personalised Financial Status Report — a diagnostic of your wealth personality, priorities, and the strategy most aligned with who you are.</p>
+        <button class="intro-start" id="btn-start">Begin My Assessment &rarr;</button>
+        <p class="intro-note">Takes 3 minutes &middot; No financial data required &middot; Instant results</p>
+      </div>
+    </div>
+  `;
+}
+
+// ── Quiz ───────────────────────────────────────────────────────────────────
+function renderQuiz() {
+  const q = QUESTIONS[STATE.currentQ];
+  const qNum = STATE.currentQ + 1;
+  const total = QUESTIONS.length;
+  const pct = Math.round((STATE.currentQ / total) * 100);
+  let body = '';
+
+  if (q.type === 'binary') {
+    const aSelected = STATE.answers[q.id] === 0;
+    const bSelected = STATE.answers[q.id] === 1;
+    body = `
+      ${q.block ? `<div class="quiz-subhead">${q.block}</div>` : ''}
+      <div class="quiz-question">Which matters more to you?</div>
+      <div class="choices-wrap">
+        <div class="choice-card ${aSelected?'selected':''}" data-answer="0">
+          <div class="choice-icon">${ICONS[q.a.icon]||''}</div>
+          <div class="choice-label">${q.a.label}</div>
+        </div>
+        <div class="or-badge">OR</div>
+        <div class="choice-card ${bSelected?'selected':''}" data-answer="1">
+          <div class="choice-icon">${ICONS[q.b.icon]||''}</div>
+          <div class="choice-label">${q.b.label}</div>
+        </div>
+      </div>
+    `;
+  } else if (q.type === 'slider') {
+    const val = STATE.sliderValues[q.id] || 3;
+    body = `
+      <div class="quiz-question">${q.text}</div>
+      <div class="slider-wrap">
+        <div class="slider-value-display" id="slider-val">${val}</div>
+        <input type="range" id="slider-input" min="${q.min}" max="${q.max}" value="${val}" />
+        <div class="slider-labels">
+          <span class="slider-label">${q.labelMin}</span>
+          <span class="slider-label">${q.labelMid}</span>
+          <span class="slider-label">${q.labelMax}</span>
+        </div>
+      </div>
+      <button class="btn-next" id="btn-next">Continue &rarr;</button>
+    `;
+  } else if (q.type === 'multiselect') {
+    const chips = q.options.map(o => `<div class="ms-chip ${STATE.multiselect.includes(o)?'selected':''}" data-opt="${o}">${o}</div>`).join('');
+    body = `
+      <div class="quiz-question">${q.text}</div>
+      <p style="text-align:center;color:var(--sub);font-size:0.88rem;margin-bottom:20px;">Select up to 3</p>
+      <div class="multiselect-grid">${chips}</div>
+      <button class="btn-next" id="btn-next">Continue &rarr;</button>
+    `;
+  }
+
+  return `
+    <div class="quiz-screen">
+      <div class="quiz-assessment-label">Financial Status Assessment</div>
+      <div class="quiz-meta">
+        <div class="quiz-counter">Question ${qNum} of ${total}</div>
+        <div class="progress-track"><div class="progress-fill" style="width:${pct}%"></div></div>
+      </div>
+      ${body}
+    </div>
+  `;
+}
+
+function attachQuizHandlers() {
+  const q = QUESTIONS[STATE.currentQ];
+  if (q.type === 'binary') {
+    document.querySelectorAll('.choice-card').forEach(card => {
+      card.addEventListener('click', () => {
+        STATE.answers[q.id] = parseInt(card.dataset.answer);
+        card.classList.add('selected');
+        setTimeout(advance, 300);
+      });
+    });
+  }
+  if (q.type === 'slider') {
+    const inp = document.getElementById('slider-input');
+    const disp = document.getElementById('slider-val');
+    if (!STATE.sliderValues[q.id]) STATE.sliderValues[q.id] = 3;
+    inp.addEventListener('input', () => { STATE.sliderValues[q.id] = parseInt(inp.value); disp.textContent = inp.value; });
+    document.getElementById('btn-next').addEventListener('click', advance);
+  }
+  if (q.type === 'multiselect') {
+    document.querySelectorAll('.ms-chip').forEach(chip => {
+      chip.addEventListener('click', () => {
+        const opt = chip.dataset.opt;
+        if (STATE.multiselect.includes(opt)) { STATE.multiselect = STATE.multiselect.filter(o => o !== opt); chip.classList.remove('selected'); }
+        else if (STATE.multiselect.length < 3) { STATE.multiselect.push(opt); chip.classList.add('selected'); }
+      });
+    });
+    document.getElementById('btn-next').addEventListener('click', advance);
+  }
+}
+
+function advance() {
+  if (STATE.currentQ < QUESTIONS.length - 1) {
+    STATE.currentQ++;
+    STATE.screen = 'quiz';
+    render();
+  } else {
+    STATE.screen = 'generating';
+    render();
+  }
+}
+
+// ── Generating screen ──────────────────────────────────────────────────────
+function renderGenerating() {
+  return `
+    <div class="generating-screen">
+      <h2 class="gen-title">Analysing your assessment&hellip;</h2>
+      <div class="gen-bar-track"><div class="gen-bar-fill"></div></div>
+      <div class="gen-lines">
+        <div class="gen-line"><div class="gen-line-dot"></div>Analysing your financial priorities&hellip;</div>
+        <div class="gen-line"><div class="gen-line-dot"></div>Mapping your wealth profile&hellip;</div>
+        <div class="gen-line"><div class="gen-line-dot"></div>Calculating your financial status&hellip;</div>
+        <div class="gen-line done"><div class="gen-line-dot"></div>Your Financial Status Report is ready.</div>
+      </div>
+    </div>
+  `;
+}
+
+// ── Teaser screen ──────────────────────────────────────────────────────────
+function renderTeaser() {
+  STATE.scores = computeScores();
+  STATE.winner = getWinner(STATE.scores);
+  const profile = PROFILES[STATE.winner];
+  const winnerPct = Math.round(STATE.scores[STATE.winner] * 100);
+
+  const bars = PROFILE_ORDER.map(key => {
+    const p = PROFILES[key];
+    const pct = Math.round(STATE.scores[key] * 100);
+    const isWinner = key === STATE.winner;
+    return `
+      <div class="score-bar-row ${isWinner ? 'winner' : 'blurred'}">
+        <div class="score-bar-label">${p.name}</div>
+        <div class="score-bar-track"><div class="score-bar-fill" style="width:${pct}%"></div></div>
+        <div class="score-bar-pct">${pct}%</div>
+      </div>
+    `;
+  }).join('');
+
+  return `
+    <div class="teaser-screen">
+      <div class="teaser-eyebrow">Your Financial Status Report</div>
+      <h2 class="teaser-headline">${profile.headline}</h2>
+
+      <div class="teaser-hero">
+        <img src="${profile.img}" alt="${profile.name}" style="object-position:${profile.imgPos}" />
+        <div class="teaser-hero-overlay"></div>
+      </div>
+
+      <div class="teaser-desc-card">
+        <p class="teaser-desc-visible">${profile.teaserLine}</p>
+        <p class="teaser-desc-locked">Your full financial status analysis includes your complete wealth personality breakdown, the specific strategies most aligned with your profile, a personalised action plan, and your recommended next step with Life Changers Financial Services.</p>
+        <div class="teaser-lock-label">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+          Full analysis unlocked below
+        </div>
+      </div>
+
+      <div class="teaser-bars">
+        <div class="teaser-bars-title">Profile match — your scores</div>
+        ${bars}
+      </div>
+
+      <div class="teaser-gate">
+        <div class="gate-title">Unlock your complete Financial Status Report</div>
+        <div class="gate-sub">Enter your email and we'll send your full results plus a personalised next step from our advisors.</div>
+        <input class="gate-input" id="gate-email" type="email" placeholder="your@email.com" autocomplete="email" />
+        <button class="gate-submit" id="gate-submit">Unlock My Report &rarr;</button>
+        <div class="gate-note">No spam. Unsubscribe any time.</div>
+      </div>
+    </div>
+  `;
+}
+
+function attachTeaserHandlers() {
+  document.getElementById('gate-submit').addEventListener('click', () => {
+    const val = document.getElementById('gate-email').value.trim();
+    if (!val || !val.includes('@')) {
+      document.getElementById('gate-email').style.borderColor = '#e05252';
+      return;
+    }
+    STATE.email = val;
+    fetch(N8N_WEBHOOK, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        email: STATE.email,
+        profile: STATE.winner,
+        profileName: PROFILES[STATE.winner].name,
+        percentage: Math.round(STATE.scores[STATE.winner] * 100),
+        scores: Object.fromEntries(Object.entries(STATE.scores).map(([k,v]) => [k, Math.round(v*100)])),
+        sliders: STATE.sliderValues,
+        priorities: STATE.multiselect,
+      })
+    }).catch(() => {});
+    STATE.screen = 'result';
+    render();
+  });
+}
+
+// ── Full result ────────────────────────────────────────────────────────────
+function renderResult() {
+  const profile = PROFILES[STATE.winner];
+  const scores = STATE.scores;
+
+  const mosaicTiles = PROFILE_ORDER.map(key => {
+    const p = PROFILES[key];
+    const pct = Math.round(scores[key] * 100);
+    return `
+      <div class="mosaic-tile ${key === STATE.winner ? 'winner' : ''}">
+        <img src="${p.img}" alt="${p.name}" loading="lazy" style="object-position:${p.imgPos}" />
+        <div class="mosaic-overlay">
+          <div class="mosaic-pct">${pct}%</div>
+          <div class="mosaic-name">${p.name}</div>
+        </div>
+      </div>
+    `;
+  }).join('');
+
+  return `
+    <div class="result-screen">
+      <p class="result-subhead">Your Financial Status Report</p>
+      <h2 class="result-heading">${profile.headline}</h2>
+      <p class="result-subhead" style="margin-bottom:32px;">Your full profile comparison across all five financial identities</p>
+      <div class="mosaic">${mosaicTiles}</div>
+      <div class="profile-card">
+        <div class="profile-card-eyebrow">Your financial identity</div>
+        <div class="profile-card-name">${profile.name}</div>
+        <p class="profile-card-desc">${profile.desc}</p>
+      </div>
+      <a href="#" class="btn-cta">${profile.cta}</a>
+    </div>
+  `;
+}
+
+// ── Boot ───────────────────────────────────────────────────────────────────
+render();
+document.addEventListener('click', e => {
+  if (e.target && e.target.id === 'btn-start') { STATE.screen = 'quiz'; render(); }
+});
+</script>
+</body>
+</html>
