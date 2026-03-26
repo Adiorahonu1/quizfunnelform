@@ -563,6 +563,7 @@ const STATE = {
   sliderValues: {},
   multiselect: [],
   firstName: '',
+  phone: '',
   email: '',
   scores: {},
   winner: '',
@@ -821,11 +822,12 @@ function renderTeaser() {
 
       <div class="teaser-gate">
         <div class="gate-title">Unlock your complete Financial Status Report</div>
-        <div class="gate-sub">Enter your name and email and we will send your full personalised report straight to your inbox.</div>
+        <div class="gate-sub">Enter your details and we will send your full personalised report straight to your inbox.</div>
         <div class="gate-row">
           <input class="gate-input" id="gate-name" type="text" placeholder="Your first name" autocomplete="given-name" />
           <input class="gate-input" id="gate-email" type="email" placeholder="your@email.com" autocomplete="email" />
         </div>
+        <input class="gate-input" id="gate-phone" type="tel" placeholder="Your phone number" autocomplete="tel" />
         <button class="gate-submit" id="gate-submit">Send My Report &rarr;</button>
         <div class="gate-note">No spam. Unsubscribe any time.</div>
       </div>
@@ -837,6 +839,7 @@ function attachTeaserHandlers() {
   document.getElementById('gate-submit').addEventListener('click', () => {
     const nameVal = document.getElementById('gate-name').value.trim();
     const emailVal = document.getElementById('gate-email').value.trim();
+    const phoneVal = document.getElementById('gate-phone').value.trim();
     let valid = true;
     if (!nameVal) {
       document.getElementById('gate-name').classList.add('error');
@@ -850,10 +853,17 @@ function attachTeaserHandlers() {
     } else {
       document.getElementById('gate-email').classList.remove('error');
     }
+    if (!phoneVal) {
+      document.getElementById('gate-phone').classList.add('error');
+      valid = false;
+    } else {
+      document.getElementById('gate-phone').classList.remove('error');
+    }
     if (!valid) return;
 
     STATE.firstName = nameVal;
     STATE.email = emailVal;
+    STATE.phone = phoneVal;
 
     fetch(N8N_WEBHOOK, {
       method: 'POST',
@@ -861,6 +871,7 @@ function attachTeaserHandlers() {
       body: JSON.stringify({
         firstName: STATE.firstName,
         email: STATE.email,
+        phone: STATE.phone,
         profile: STATE.winner,
         profileName: PROFILES[STATE.winner].name,
         percentage: Math.round(STATE.scores[STATE.winner] * 100),
