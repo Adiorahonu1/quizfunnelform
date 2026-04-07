@@ -2592,13 +2592,6 @@
       document.getElementById('ty-agent-title').textContent   = CONFIG.AGENT_TITLE + ' \u00b7 Sunrun';
       document.getElementById('ty-agent-tagline').textContent = CONFIG.AGENT_TAGLINE;
 
-      /* Agent contact buttons (thank-you state only) */
-      const contactWrap = document.getElementById('agent-contact-links');
-      contactWrap.innerHTML = `
-        <a class="agent-form-cta" href="#eligibility-form">✅ Check My Eligibility — Free &darr;</a>
-        <p class="agent-form-note">30 seconds &middot; No obligation &middot; Michael reviews personally</p>
-      `;
-
       /* Thank you contact buttons */
       const tyWrap = document.getElementById('thankyou-contact-links');
       tyWrap.innerHTML = `
